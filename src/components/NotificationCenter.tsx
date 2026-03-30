@@ -10,7 +10,13 @@ interface NotificationProps {
 
 export function NotificationCenter() {
   const [notifications, setNotifications] = useState<NotificationProps[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
+
+  const addNotification = (message: string, type: NotificationProps['type']) => {
+    setNotifications(prev => [...prev, { message, type }]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.message !== message));
+    }, 4000);
+  };
 
   useEffect(() => {
     // Show welcome notification
@@ -20,16 +26,6 @@ export function NotificationCenter() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const addNotification = (message: string, type: NotificationProps['type']) => {
-    const id = Date.now();
-    setNotifications(prev => [...prev, { message, type }]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.message !== message));
-    }, 4000);
-  };
-
-  if (!isVisible) return null;
 
   return (
     <div className="fixed top-20 right-4 z-50 space-y-2">

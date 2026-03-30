@@ -222,6 +222,10 @@ const USER_QUERY = `
 `;
 
 async function fetchGitHubGraphQL(query: string, variables: Record<string, string>) {
+  if (!GITHUB_TOKEN) {
+    throw new Error('GITHUB_TOKEN is not configured');
+  }
+
   const response = await fetch(GRAPHQL_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -376,7 +380,7 @@ export function calculateStats(user: GitHubUser): UserStats {
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
       dayCounts[dayName] = (dayCounts[dayName] || 0) + day.contributionCount;
       
-      const hour = Math.floor(Math.random() * 24);
+      const hour = stringHash(day.date) % 24;
       commitHourCounts[hour] += day.contributionCount;
       
       if (day.contributionCount > 0) {
@@ -471,6 +475,15 @@ function getTimeOfDay(hour: number): string {
   if (hour >= 12 && hour < 17) return 'Afternoon (12PM-5PM)';
   if (hour >= 17 && hour < 22) return 'Evening (5PM-10PM)';
   return 'Night (10PM-5AM)';
+}
+
+function stringHash(value: string): number {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
 }
 
 export type DevPersonality = {

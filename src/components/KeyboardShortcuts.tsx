@@ -7,16 +7,19 @@ interface KeyboardShortcutsProps {
   enabled?: boolean;
 }
 
-interface Shortcut {
-  key: string;
-  description: string;
-  action: () => void;
-}
-
 export function KeyboardShortcuts({ enabled = true }: KeyboardShortcutsProps) {
   const router = useRouter();
   const [showHelp, setShowHelp] = useState(false);
-  const [lastSearch, setLastSearch] = useState<string[]>([]);
+  const [lastSearch, setLastSearch] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    const saved = window.localStorage.getItem('gitwrapped_search_history');
+    if (!saved) return [];
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
+    }
+  });
 
   const navigateTo = useCallback((username: string) => {
     if (username) {
@@ -66,24 +69,20 @@ export function KeyboardShortcuts({ enabled = true }: KeyboardShortcutsProps) {
 
   // Save search to history
   useEffect(() => {
-    const handleSearch = (e: CustomEvent<string>) => {
+    const handleSearch = (event: Event) => {
+      if (!(event instanceof CustomEvent)) return;
+      const detail = typeof event.detail === 'string' ? event.detail : null;
+      if (!detail) return;
+
       setLastSearch(prev => {
-        const newHistory = [e.detail, ...prev.filter(s => s !== e.detail)].slice(0, 5);
+        const newHistory = [detail, ...prev.filter(s => s !== detail)].slice(0, 5);
         localStorage.setItem('gitwrapped_search_history', JSON.stringify(newHistory));
         return newHistory;
       });
     };
 
-    window.addEventListener('gitwrapped_search', handleSearch as any);
-    return () => window.removeEventListener('gitwrapped_search', handleSearch as any);
-  }, []);
-
-  // Load search history
-  useEffect(() => {
-    const saved = localStorage.getItem('gitwrapped_search_history');
-    if (saved) {
-      setLastSearch(JSON.parse(saved));
-    }
+    window.addEventListener('gitwrapped_search', handleSearch as EventListener);
+    return () => window.removeEventListener('gitwrapped_search', handleSearch as EventListener);
   }, []);
 
   useEffect(() => {

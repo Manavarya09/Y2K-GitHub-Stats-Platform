@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ProfileCard } from '@/components/ProfileCard';
 import { StatsDashboard } from '@/components/StatsDashboard';
 import { PersonalitySection } from '@/components/PersonalitySection';
 import { GitHubWrapped } from '@/components/GitHubWrapped';
@@ -197,9 +197,9 @@ export default function ResultsPage() {
             <div className="text-8xl mb-4">😵</div>
             <h2 className="font-orbitron text-3xl font-bold text-[var(--neon-magenta)] mb-2">Oops!</h2>
             <p className="font-mono text-gray-400 mb-6">{error}</p>
-            <a href="/" className="inline-block chrome-button px-8 py-4 font-orbitron text-sm uppercase tracking-wider text-[var(--neon-cyan)]">
+            <Link href="/" className="inline-block chrome-button px-8 py-4 font-orbitron text-sm uppercase tracking-wider text-[var(--neon-cyan)]">
               ← Try Again
-            </a>
+            </Link>
           </GlassPanel>
         </motion.div>
         <KeyboardShortcuts />
@@ -330,7 +330,7 @@ export default function ResultsPage() {
   );
 }
 
-function generateAchievements(stats: any) {
+function generateAchievements(stats: UserData['stats']) {
   return [
     { id: 'first_commit', name: 'Hello World', description: 'First commit', icon: '👶', rarity: 'common' as const, unlocked: stats.totalCommits > 0 },
     { id: 'century', name: 'Century Club', description: '100 commits', icon: '💯', rarity: 'common' as const, unlocked: stats.totalCommits >= 100, progress: Math.min(stats.totalCommits, 100), maxProgress: 100 },
@@ -345,7 +345,7 @@ function generateAchievements(stats: any) {
   ];
 }
 
-function generateRoasts(stats: any) {
+function generateRoasts(stats: UserData['stats']) {
   return [
     { id: 'starter', text: `You have ${stats.totalRepos} repos but only ${stats.totalStars} stars. You start projects faster than you finish them 💀`, category: 'roast' as const },
     { id: 'abandoner', text: `You've abandoned ${stats.projectsAbandoned} projects. Your GitHub is a digital graveyard 🪦`, category: 'roast' as const },

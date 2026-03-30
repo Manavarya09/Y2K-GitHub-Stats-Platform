@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassPanel } from './GlassPanel';
 import { ChromeButton } from './ChromeButton';
@@ -16,10 +16,11 @@ const FEATURED_USERS = [
 ];
 
 export function LandingPage() {
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
-  const [showParticles, setShowParticles] = useState(true);
+  const showParticles = true;
 
   const loadingMessages = [
     'Initializing neural network...',
@@ -41,11 +42,11 @@ export function LandingPage() {
       await new Promise(resolve => setTimeout(resolve, 350));
     }
 
-    window.location.href = `/${username.trim()}`;
+    router.push(`/${username.trim()}`);
   };
 
   const handleFeaturedClick = (userUsername: string) => {
-    window.location.href = `/${userUsername}`;
+    router.push(`/${userUsername}`);
   };
 
   return (

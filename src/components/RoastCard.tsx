@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { GlassPanel } from './GlassPanel';
 import { ChromeButton } from './ChromeButton';
-import { useState } from 'react';
 
 interface RoastCardProps {
   roast: {
@@ -15,8 +14,6 @@ interface RoastCardProps {
 }
 
 export function RoastCard({ roast, onNewRoast }: RoastCardProps) {
-  const [showNewButton, setShowNewButton] = useState(true);
-
   const getCategoryColor = () => {
     switch (roast.category) {
       case 'roast': return 'var(--neon-magenta)';
@@ -79,8 +76,8 @@ export function RoastCard({ roast, onNewRoast }: RoastCardProps) {
           </p>
           
           {/* Decorative quotes */}
-          <span className="absolute top-2 left-4 text-4xl opacity-30" style={{ color: getCategoryColor() }}>"</span>
-          <span className="absolute bottom-2 right-4 text-4xl opacity-30 rotate-180" style={{ color: getCategoryColor() }}>"</span>
+          <span className="absolute top-2 left-4 text-4xl opacity-30" style={{ color: getCategoryColor() }}>&quot;</span>
+          <span className="absolute bottom-2 right-4 text-4xl opacity-30 rotate-180" style={{ color: getCategoryColor() }}>&quot;</span>
         </motion.div>
 
         <div className="flex justify-center mt-4">

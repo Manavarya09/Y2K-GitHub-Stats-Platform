@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -18,7 +18,6 @@ interface ParticleBackgroundProps {
 
 export function ParticleBackground({ variant = 'stars' }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -55,8 +54,6 @@ export function ParticleBackground({ variant = 'stars' }: ParticleBackgroundProp
         opacity: Math.random() * 0.5 + 0.2,
       });
     }
-
-    setParticles(newParticles);
 
     let animationId: number;
 

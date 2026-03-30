@@ -7,8 +7,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get('username');
 
-  if (!username) {
-    return NextResponse.json({ error: 'Username required' }, { status: 400 });
+  if (!username || !/^[a-zA-Z0-9-]{1,39}$/.test(username)) {
+    return NextResponse.json({ error: 'Valid username required' }, { status: 400 });
   }
 
   try {

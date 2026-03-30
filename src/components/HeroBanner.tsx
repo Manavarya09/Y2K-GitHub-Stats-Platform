@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 
 interface HeroBannerProps {
   username: string;
@@ -23,6 +24,28 @@ interface HeroBannerProps {
 }
 
 export function HeroBanner({ username, avatar, stats, personality, level }: HeroBannerProps) {
+  const particles = useMemo(() => {
+    const hash = (value: string) => {
+      let h = 0;
+      for (let i = 0; i < value.length; i++) {
+        h = (h << 5) - h + value.charCodeAt(i);
+        h |= 0;
+      }
+      return Math.abs(h);
+    };
+
+    return Array.from({ length: 20 }, (_, i) => {
+      const base = `${username}-${personality.type}-${i}`;
+      const h = hash(base);
+      const left = (hash(`${base}-l`) % 10000) / 100;
+      const top = (hash(`${base}-t`) % 10000) / 100;
+      const duration = 3 + (hash(`${base}-d`) % 2000) / 1000;
+      const delay = (h % 2000) / 1000;
+
+      return { left, top, duration, delay };
+    });
+  }, [personality.type, username]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -50,23 +73,23 @@ export function HeroBanner({ username, avatar, stats, personality, level }: Hero
         />
         
         {/* Floating particles */}
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 rounded-full"
             style={{
               backgroundColor: personality.color,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -100, 0],
               opacity: [0, 1, 0],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}

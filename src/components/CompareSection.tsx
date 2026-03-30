@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { GlassPanel } from './GlassPanel';
 import { ChromeButton } from './ChromeButton';
 
@@ -20,7 +20,7 @@ interface CompareProps {
 export function CompareSection({ currentStats, currentUsername }: CompareProps) {
   const [compareUsername, setCompareUsername] = useState('');
   const [isComparing, setIsComparing] = useState(false);
-  const [comparisonData, setComparisonData] = useState<any>(null);
+  const [comparisonData, setComparisonData] = useState<{ user?: { login: string }; stats?: CompareProps['currentStats'] } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -36,7 +36,7 @@ export function CompareSection({ currentStats, currentUsername }: CompareProps) 
       const data = await res.json();
       setComparisonData(data);
       setIsComparing(true);
-    } catch (err) {
+    } catch {
       setError('User not found');
     } finally {
       setLoading(false);
@@ -167,7 +167,7 @@ export function CompareSection({ currentStats, currentUsername }: CompareProps) 
                 }
                 return (
                   <div className="text-gray-400 font-orbitron text-xl">
-                    ⚖️ It's a Tie!
+                    ⚖️ It&apos;s a Tie!
                   </div>
                 );
               })()}

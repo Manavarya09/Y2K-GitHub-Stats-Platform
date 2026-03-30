@@ -51,8 +51,8 @@ export async function GET(request: NextRequest) {
   const username = searchParams.get('username');
   const theme = searchParams.get('theme') || 'cyberpunk';
 
-  if (!username) {
-    return NextResponse.json({ error: 'Username required' }, { status: 400 });
+  if (!username || !/^[a-zA-Z0-9-]{1,39}$/.test(username)) {
+    return NextResponse.json({ error: 'Valid username required' }, { status: 400 });
   }
 
   const selectedTheme = THEMES[theme as keyof typeof THEMES] || THEMES.cyberpunk;
