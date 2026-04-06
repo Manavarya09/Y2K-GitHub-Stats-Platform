@@ -1053,7 +1053,7 @@ export function generateRoast(stats: UserStats): Roast {
       category: 'compliment',
     },
     {
-      id: ' grinder',
+      id: 'grinder',
       text: `A ${stats.streak}-day streak! Your commitment is stronger than most marriages 💍`,
       category: 'compliment',
     },
